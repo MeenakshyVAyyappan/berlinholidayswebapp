@@ -58,7 +58,7 @@ const Navbar = () => {
             <div className=" w-28  ">
               <Link to="/">
                 <img
-                  src="/images/home-1/brand-1.png"
+                  src="/images/home-3/berlinlogo01.png"
                   className="block lg:hidden "
                   alt="Royella_website_logo"
                 />
@@ -197,6 +197,13 @@ const Navbar = () => {
                       </NavLink>
                     </li>
                   </div>
+                  <div className=" px-5 group hover:bg-khaki hover:text-white">
+                    <li className="hover:ml-3 duration-300  ">
+                      <NavLink to="/pricing" className="py-2 block">
+                        PRICING
+                      </NavLink>
+                    </li>
+                  </div>
                   {/* <div className=" px-5 group hover:bg-khaki hover:text-white">
                     <li className="hover:ml-3 duration-300  ">
                       <NavLink to="/room_details" className="block py-2">
@@ -214,13 +221,13 @@ const Navbar = () => {
                   : isActive
                   ? "active"
                   : ""} text-lightBlack lg:text-white dark:text-white  lg:border-b-0 px-3 py-2 w-full block transition-all duration-300 group relative `}
-              to="#"
+              to="/services"
             >
               <span className="flex items-center">
-                Service
-                <BiChevronDown className="ml-1" />
+                Services
+                {/* <BiChevronDown className="ml-1" /> */}
               </span>
-              <div className="absolute pt-5 lg:pt-8 z-20">
+              {/* <div className="absolute pt-5 lg:pt-8 z-20">
                 <ul className="shadow-2xl hidden group-hover:block rounded-sm bg-white text-black w-[200px] text-left dark:bg-normalBlack dark:text-white transition-all duration-500 text-sm py-4 ">
                   <div className=" px-5 group hover:bg-khaki hover:text-white">
                     <li className="hover:ml-3 duration-300  ">
@@ -258,7 +265,7 @@ const Navbar = () => {
                     </li>
                   </div>
                 </ul>
-              </div>
+              </div> */}
             </NavLink>
             {/* blog sub menu link */}
             <NavLink

@@ -34,7 +34,7 @@ const LatestBlog = () => {
             <div className="flex items-center justify-center space-x-2 mb-4  ">
               <hr className="w-[100px] h-[1px] text-[#dedbd4] dark:text-[#3b3b3b] " />
               <img
-                src="/images/home-1/section-shape1.png"
+                src="/images/home-1/sectiondivider01.png"
                 alt="room_section_logo"
                 className="w-[50px] h-[50px]"
               />
@@ -77,7 +77,7 @@ const LatestBlog = () => {
                           Interior
                         </p> */}
                       </div>
-                      <Link to="/blog_details">
+                      <Link to="/blog">
                         <button className="text-xl sm:text-[22px] xl:text-2xl text-left 2xl:text-[26px] leading-[34px] font-semibold text-lightBlack dark:text-white py-2 sm:py-3 md:py-4 hover:underline underline-offset-2">
                          Top 5 Luxury Resorts in India for Your Next Getaway
                         </button>
@@ -85,7 +85,7 @@ const LatestBlog = () => {
                     </div>
                     <div className="  border-t-[1px] border-[#e8e8e8] dark:border-[#424242]  py-2 lg:py-3">
                       <Link
-                        to={"blog_details"}
+                        to={"blog"}
                         className="px-[30px] flex items-center justify-between "
                       >
                         <button className=" text-sm sm:text-base flex items-center ">
@@ -128,7 +128,7 @@ const LatestBlog = () => {
                           Interior
                         </p> */}
                       </div>
-                      <Link to="/blog_details">
+                      <Link to="/blog">
                         <button className="text-xl sm:text-[22px] xl:text-2xl text-left 2xl:text-[26px] leading-[34px] font-semibold text-lightBlack dark:text-white py-2 sm:py-3 md:py-4 hover:underline underline-offset-2">
                           A Taste of Luxury: Fine Dining Experiences You Can’t Miss
                         </button>
@@ -136,7 +136,7 @@ const LatestBlog = () => {
                     </div>
                     <div className="  border-t-[1px] border-[#e8e8e8] dark:border-[#424242]  py-2 lg:py-3">
                       <Link
-                        to={"blog_details"}
+                        to={"blog"}
                         className="px-[30px] flex items-center justify-between "
                       >
                         <button className=" text-sm sm:text-base flex items-center ">
@@ -179,7 +179,7 @@ const LatestBlog = () => {
                           Interior
                         </p> */}
                       </div>
-                      <Link to="/blog_details">
+                      <Link to="/blog">
                         <button className="text-xl sm:text-[22px] xl:text-2xl text-left 2xl:text-[26px] leading-[34px] font-semibold text-lightBlack dark:text-white py-2 sm:py-3 md:py-4 hover:underline underline-offset-2">
                           Wellness Retreats: Reconnect, Relax, and Recharge
                         </button>
@@ -187,7 +187,7 @@ const LatestBlog = () => {
                     </div>
                     <div className="  border-t-[1px] border-[#e8e8e8] dark:border-[#424242]  py-2 lg:py-3">
                       <Link
-                        to={"blog_details"}
+                        to={"blog"}
                         className="px-[30px] flex items-center justify-between "
                       >
                         <button className=" text-sm sm:text-base flex items-center ">

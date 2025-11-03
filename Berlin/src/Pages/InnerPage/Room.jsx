@@ -56,7 +56,7 @@ const Room = () => {
             <div className="flex items-center justify-center space-x-2">
               <hr className="w-[100px] h-[1px] bg-lightGray dark:bg-gray text-lightGray dark:text-gray" />
               <img
-                src="/images/inner/inner-logo.png"
+                src="/images/home-1/sectiondivider01.png"
                 alt="room_section_logo"
                 className="w-[50px] h-[50px]"
               />
@@ -576,7 +576,7 @@ const Room = () => {
                 RESTORE EXTRA FECILITIES FOR A LUXURIOUS LIFE
               </h1>
             </div>
-            <div className="hidden sm:flex items-center lg:space-x-5  space-x-3">
+            {/* <div className="hidden sm:flex items-center lg:space-x-5  space-x-3">
               <button
                 className="lg:w-[50px] w-[30px] h-[30px] lg:h-[50px]  flex items-center justify-center border-[1px] border-gray  text-lightGray hover:bg-khaki hover:border-none group"
                 title="Button disabled use swapping"
@@ -592,7 +592,7 @@ const Room = () => {
               >
                 <BsChevronRight className="w-5 h-5 text-gray   group-hover:text-white" />
               </button>
-            </div>
+            </div> */}
           </div>
           <hr className="w-full h-[2px] text-gray bg-gray mt-10 " />
 

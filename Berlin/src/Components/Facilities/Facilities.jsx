@@ -51,7 +51,7 @@ const Facilities = () => {
                 Fitness
               </h4>
               <h1 className="text-2xl md:text-3xl 2xl:text-[32px] leading-[26px] font-semibold text-lightBlack dark:text-white">
-                <Link to="/service_details"> Gym & Wellness Center</Link>
+                <Link to="/services"> Gym & Wellness Center</Link>
               </h1>
 
               <p className="font-Lora text-sm sm:text-base text-gray dark:text-lightGray leading-[26px] font-normal my-10 lg:mt-[46px] lg:mb-[40px] before:absolute before:h-[30px] before:left-0 before:top-[-35px] before:bg-[#ddd] before:w-[1px] relative">
@@ -62,7 +62,7 @@ const Facilities = () => {
                    relaxation. Whether it’s yoga, cardio, or weights — we
                     help you keep your wellness goals on track.
               </p>
-              <Link to="/service_details">
+              <Link to="/services">
                 <HiArrowLongRight
                   size={30}
                   className="text-gray hover:text-khaki"
@@ -83,7 +83,7 @@ const Facilities = () => {
                 LEISURE
               </h4>
               <h1 className="text-2xl md:text-3xl 2xl:text-[32px] leading-[26px] font-semibold text-lightBlack dark:text-white">
-                <Link to="/service_details"> Indoor Swimming Pool</Link>
+                <Link to="/services"> Indoor Swimming Pool</Link>
               </h1>
 
               <p className="font-Lora relative text-sm sm:text-base text-gray dark:text-lightGray leading-[26px] font-normal my-10 lg:mt-[46px] lg:mb-[40px] before:absolute before:h-[30px] before:left-0 before:top-[-35px] before:bg-[#ddd] before:w-[1px]">
@@ -92,7 +92,7 @@ const Facilities = () => {
                   provides a serene space to unwind, swim a few laps, or simply 
                   float away your stress amidst calming ambiance and soft lighting.
               </p>
-              <Link to="/service_details">
+              <Link to="/services">
                 <HiArrowLongRight
                   className="text-gray hover:text-khaki"
                   size={30}
@@ -137,7 +137,7 @@ const Facilities = () => {
                 DINING
               </h4>
               <h1 className="text-2xl md:text-3xl 2xl:text-[32px] leading-[26px] font-semibold text-lightBlack dark:text-white">
-                <Link to="/service_details">The Restaurant & Lounge</Link>
+                <Link to="/services">The Restaurant & Lounge</Link>
               </h1>
 
               <p className="font-Lora text-sm sm:text-base text-gray dark:text-lightGray leading-[26px] font-normal my-10 lg:mt-[46px] lg:mb-[40px] relative before:absolute before:h-[30px] before:left-0 before:top-[-35px] before:bg-[#ddd] before:w-[1px]">
@@ -147,7 +147,7 @@ const Facilities = () => {
                 meal is crafted by expert chefs to create a memorable 
                 dining experience.
               </p>
-              <Link to="/service_details">
+              <Link to="/services">
                 <HiArrowLongRight
                   className="text-gray hover:text-khaki"
                   size={30}
@@ -168,7 +168,7 @@ const Facilities = () => {
                 EXPERIENCE
               </h4>
               <h1 className="text-2xl md:text-3xl 2xl:text-[32px] leading-[26px] font-semibold text-lightBlack dark:text-white">
-                <Link to="/service_details">Adventure & Recreation Zone</Link>
+                <Link to="/services">Adventure & Recreation Zone</Link>
               </h1>
 
               <p className="font-Lora relative text-sm sm:text-base text-gray dark:text-lightGray leading-[26px] font-normal my-10 lg:mt-[46px] lg:mb-[40px] before:absolute before:h-[30px] before:left-0 before:top-[-35px] before:bg-[#ddd] before:w-[1px]">
@@ -177,7 +177,7 @@ const Facilities = () => {
                  experiences, our resort ensures every guest finds their perfect
                   blend of thrill and tranquility.
               </p>
-              <Link to="/service_details">
+              <Link to="/services">
                 <HiArrowLongRight
                   className="text-gray hover:text-khaki"
                   size={30}

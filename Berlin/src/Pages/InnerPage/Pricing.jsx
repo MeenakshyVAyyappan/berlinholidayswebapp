@@ -18,7 +18,7 @@ const Pricing = () => {
             <div className="flex items-center justify-center space-x-2">
               <hr className="w-[100px] h-[1px] bg-lightGray dark:bg-gray text-lightGray dark:text-gray" />
               <img
-                src="/images/inner/inner-logo.png"
+                src="/images/home-1/sectiondivider01.png"
                 alt="room_section_logo"
                 className="w-[50px] h-[50px]"
               />
@@ -232,7 +232,7 @@ const Pricing = () => {
             <div className="flex items-center justify-center space-x-2">
               <hr className="w-[100px] h-[1px] bg-lightGray dark:bg-gray text-lightGray dark:text-gray" />
               <img
-                src="/images/inner/inner-logo.png"
+                src="/images/home-1/sectiondivider01.png"
                 alt="room_section_logo"
                 className="w-[50px] h-[50px]"
               />
