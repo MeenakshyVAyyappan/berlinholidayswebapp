@@ -16,14 +16,14 @@ const Main = () => {
 
   return (
     <>
-      <HelmetChanger title="Hotel Booking" />
-      <ScrollToTop />
-      <GoToTop />
-      <Navbar />
+      <HelmetChanger title="Hotel Booking"/>
+      <ScrollToTop/>
+      <GoToTop/>
+      <Navbar/>
       <div>
-        <Outlet />
+      <Outlet/>
       </div>
-      <Footer />
+      <Footer/>
     </>
   );
 };

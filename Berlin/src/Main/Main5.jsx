@@ -16,15 +16,14 @@ const Main5 = () => {
   return (
     <>
       <HelmetChanger title="Apartment" />
-      <ScrollToTop />
-      <GoToTop />
-      <Navbar5 />
+      <ScrollToTop/>
+      <GoToTop/>
+      <Navbar5/>
       <div>
-        <Outlet />
+        <Outlet/>
       </div>
-      <Footer5 />
+      <Footer5/>
     </>
   );
 };
-
 export default Main5;
