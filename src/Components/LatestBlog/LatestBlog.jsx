@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useKeenSlider } from "keen-slider/react";
 import "../../Components4/Testimonial/testimonials.css";
 import "keen-slider/keen-slider.min.css";
-
 const LatestBlog = () => {
   const [sliderRef] = useKeenSlider({
     breakpoints: {
@@ -79,7 +78,7 @@ const LatestBlog = () => {
                       </div>
                       <Link to="/blog">
                         <button className="text-xl sm:text-[22px] xl:text-2xl text-left 2xl:text-[26px] leading-[34px] font-semibold text-lightBlack dark:text-white py-2 sm:py-3 md:py-4 hover:underline underline-offset-2">
-                         Top 5 Luxury Resorts in India for Your Next Getaway
+                         Top 5 Luxury Resorts in Wayanad for Your Next Getaway
                         </button>
                       </Link>
                     </div>
