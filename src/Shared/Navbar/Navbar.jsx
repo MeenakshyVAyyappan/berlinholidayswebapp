@@ -4,7 +4,6 @@ import { FaBars, FaUserCircle } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { BiChevronDown, BiSun } from "react-icons/bi";
 import { IoMoonSharp } from "react-icons/io5";
-import { FaUserCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {

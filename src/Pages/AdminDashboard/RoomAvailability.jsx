@@ -4,6 +4,7 @@ import { FaCalendar, FaBed, FaCheckCircle, FaTimesCircle, FaEdit } from "react-i
 import Swal from "sweetalert2";
 import { getRoomAvailabilityForDateRange, upsertRoomAvailability } from "../../services/availabilityService";
 import { getAllRoomTypes } from "../../services/roomService";
+import { supabase } from "../../config/supabaseClient";
 
 const RoomAvailability = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -11,6 +12,9 @@ const RoomAvailability = () => {
   const [roomTypes, setRoomTypes] = useState([]);
   const [availabilityData, setAvailabilityData] = useState({});
   const [loading, setLoading] = useState(true);
+
+  // Store last used dates per room to persist when reopening modal
+  const [lastUsedDates, setLastUsedDates] = useState({});
 
   const [formData, setFormData] = useState({
     from_date: "",
@@ -72,29 +76,154 @@ const RoomAvailability = () => {
     setAvailabilityData(availability);
   };
 
-  const handleInputChange = (e) => {
+  // Update availability display for a specific room (always shows today's availability)
+  const updateRoomAvailabilityDisplay = async (room) => {
+    const today = new Date().toISOString().split('T')[0];
+
+    const result = await getRoomAvailabilityForDateRange(
+      room.id,
+      today,
+      today
+    );
+
+    if (!result.error && result.data && result.data.length > 0) {
+      const todayAvailability = result.data[0];
+      setAvailabilityData(prev => ({
+        ...prev,
+        [room.id]: {
+          available: todayAvailability.available_rooms || 0,
+          blocked: todayAvailability.blocked_rooms || 0,
+          occupied: room.total_rooms - (todayAvailability.available_rooms || 0) - (todayAvailability.blocked_rooms || 0),
+        }
+      }));
+    } else {
+      // Default values if no availability data exists for today
+      setAvailabilityData(prev => ({
+        ...prev,
+        [room.id]: {
+          available: room.total_rooms || 0,
+          blocked: 0,
+          occupied: 0,
+        }
+      }));
+    }
+  };
+
+  const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // If both dates are selected, try to load existing availability data
+    if (name === 'from_date' || name === 'to_date') {
+      const fromDate = name === 'from_date' ? value : formData.from_date;
+      const toDate = name === 'to_date' ? value : formData.to_date;
+
+      if (fromDate && toDate && selectedRoom) {
+        // Save the dates for this room
+        setLastUsedDates(prev => ({
+          ...prev,
+          [selectedRoom.id]: {
+            from_date: fromDate,
+            to_date: toDate,
+          }
+        }));
+
+        await loadExistingAvailability(fromDate, toDate);
+      }
+    }
   };
 
-  const handleManageAvailability = (room) => {
+  const loadExistingAvailability = async (fromDate, toDate) => {
+    try {
+      const result = await getRoomAvailabilityForDateRange(selectedRoom.id, fromDate, toDate);
+
+      if (result.data && result.data.length > 0) {
+        // Load data from the first record (assuming all records in range have same settings)
+        const firstRecord = result.data[0];
+        setFormData((prev) => ({
+          ...prev,
+          available_rooms: firstRecord.available_rooms || 0,
+          blocked_rooms: firstRecord.blocked_rooms || 0,
+          minimum_stay: firstRecord.minimum_stay || 1,
+          reason: firstRecord.reason || "",
+          notes: firstRecord.notes || "",
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading existing availability:', error);
+    }
+  };
+
+  const handleManageAvailability = async (room) => {
     setSelectedRoom(room);
-    setFormData({
-      from_date: "",
-      to_date: "",
-      available_rooms: room.total_rooms || 0,
-      blocked_rooms: 0,
-      minimum_stay: 1,
-      reason: "",
-      notes: "",
-    });
-    setShowAvailabilityModal(true);
+
+    // Check if we have previously used dates for this room
+    const previousDates = lastUsedDates[room.id];
+
+    if (previousDates && previousDates.from_date && previousDates.to_date) {
+      // Load the existing availability data for these dates FIRST
+      const result = await getRoomAvailabilityForDateRange(room.id, previousDates.from_date, previousDates.to_date);
+
+      let initialFormData;
+      if (result.data && result.data.length > 0) {
+        // Use the saved data from database
+        const firstRecord = result.data[0];
+        initialFormData = {
+          from_date: previousDates.from_date,
+          to_date: previousDates.to_date,
+          available_rooms: firstRecord.available_rooms || 0,
+          blocked_rooms: firstRecord.blocked_rooms || 0,
+          minimum_stay: firstRecord.minimum_stay || 1,
+          reason: firstRecord.reason || "",
+          notes: firstRecord.notes || "",
+        };
+      } else {
+        // No data found, use defaults
+        initialFormData = {
+          from_date: previousDates.from_date,
+          to_date: previousDates.to_date,
+          available_rooms: room.total_rooms || 0,
+          blocked_rooms: 0,
+          minimum_stay: 1,
+          reason: "",
+          notes: "",
+        };
+      }
+
+      setFormData(initialFormData);
+      setShowAvailabilityModal(true);
+    } else {
+      // No previous dates, initialize with defaults
+      const initialFormData = {
+        from_date: "",
+        to_date: "",
+        available_rooms: room.total_rooms || 0,
+        blocked_rooms: 0,
+        minimum_stay: 1,
+        reason: "",
+        notes: "",
+      };
+
+      setFormData(initialFormData);
+      setShowAvailabilityModal(true);
+    }
   };
 
   const handleCloseModal = () => {
+    // Save the current dates for this room before closing
+    if (selectedRoom && formData.from_date && formData.to_date) {
+      setLastUsedDates(prev => ({
+        ...prev,
+        [selectedRoom.id]: {
+          from_date: formData.from_date,
+          to_date: formData.to_date,
+        }
+      }));
+    }
+
     setShowAvailabilityModal(false);
     setSelectedRoom(null);
     setFormData({
@@ -119,42 +248,54 @@ const RoomAvailability = () => {
       return;
     }
 
-    // Generate dates between from_date and to_date
-    const startDate = new Date(formData.from_date);
-    const endDate = new Date(formData.to_date);
-    const dates = [];
+    try {
+      // Generate dates between from_date and to_date
+      const startDate = new Date(formData.from_date);
+      const endDate = new Date(formData.to_date);
+      const dates = [];
 
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      dates.push(new Date(d).toISOString().split('T')[0]);
-    }
-
-    // Create availability records for each date
-    const availabilityRecords = dates.map(date => ({
-      room_type_id: selectedRoom.id,
-      availability_date: date,
-      available_rooms: parseInt(formData.available_rooms),
-      blocked_rooms: parseInt(formData.blocked_rooms),
-      minimum_stay: parseInt(formData.minimum_stay),
-      reason: formData.reason || null,
-      notes: formData.notes || null,
-    }));
-
-    // Save each record
-    let hasError = false;
-    for (const record of availabilityRecords) {
-      const result = await upsertRoomAvailability(record);
-      if (result.error) {
-        hasError = true;
-        break;
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        dates.push(new Date(d).toISOString().split('T')[0]);
       }
-    }
 
-    if (hasError) {
-      Swal.fire("Error", "Failed to update availability", "error");
-    } else {
+      // Create availability records for each date
+      const availabilityRecords = dates.map(date => ({
+        room_type_id: selectedRoom.id,
+        availability_date: date,
+        available_rooms: parseInt(formData.available_rooms),
+        blocked_rooms: parseInt(formData.blocked_rooms),
+        minimum_stay: parseInt(formData.minimum_stay),
+        reason: formData.reason || null,
+        notes: formData.notes || null,
+        updated_at: new Date().toISOString(),
+      }));
+
+      console.log('Saving availability records:', availabilityRecords);
+
+      // Use batch upsert instead of individual upserts
+      const { data, error } = await supabase
+        .from('room_availability')
+        .upsert(availabilityRecords, {
+          onConflict: 'room_type_id,availability_date',
+          ignoreDuplicates: false // This ensures updates happen
+        })
+        .select();
+
+      if (error) {
+        console.error('Error saving availability:', error);
+        throw error;
+      }
+
+      console.log('Successfully saved:', data);
+
+      // Update the availability display for this specific room
+      await updateRoomAvailabilityDisplay(selectedRoom);
+
       Swal.fire("Success", "Availability updated successfully!", "success");
       handleCloseModal();
-      fetchRoomTypes(); // Refresh data
+    } catch (error) {
+      console.error('Error in handleSaveAvailability:', error);
+      Swal.fire("Error", `Failed to update availability: ${error.message}`, "error");
     }
   };
 

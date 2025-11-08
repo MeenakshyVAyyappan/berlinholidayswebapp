@@ -24,13 +24,21 @@ const RoomTypes = () => {
 
   const [formData, setFormData] = useState({
     name: "",
+    category_label: "",
     description: "",
     capacity: 2,
     size: "",
     base_price: "",
+    bed_type: "",
+    star_rating: 5,
     amenities: [],
     total_rooms: 0,
     images: [],
+    check_in_time: "9:00 AM",
+    check_out_time: "12:00 PM",
+    early_check_in: true,
+    house_rules: "",
+    children_policy: "",
   });
 
   // Fetch room types on component mount
@@ -76,28 +84,48 @@ const RoomTypes = () => {
     if (result.error) {
       Swal.fire("Error", "Failed to upload image", "error");
     } else {
-      const imageUrl = result.publicUrl;
+      const imageUrl = result.data.publicUrl;
       setFormData((prev) => ({
         ...prev,
         images: [...(prev.images || []), imageUrl],
       }));
-      setImagePreview(imageUrl);
+      if (!imagePreview) {
+        setImagePreview(imageUrl);
+      }
       Swal.fire("Success", "Image uploaded successfully!", "success");
     }
     setUploadingImage(false);
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, index) => index !== indexToRemove),
+    }));
+    if (imagePreview === formData.images[indexToRemove]) {
+      setImagePreview(formData.images[0] || null);
+    }
   };
 
   const handleEditRoom = (room) => {
     setEditingRoom(room);
     setFormData({
       name: room.name || "",
+      category_label: room.category_label || "",
       description: room.description || "",
       capacity: room.capacity || 2,
       size: room.size || "",
       base_price: room.base_price || "",
+      bed_type: room.bed_type || "",
+      star_rating: room.star_rating || 5,
       amenities: room.amenities || [],
       total_rooms: room.total_rooms || 0,
       images: room.images || [],
+      check_in_time: room.check_in_time || "9:00 AM",
+      check_out_time: room.check_out_time || "12:00 PM",
+      early_check_in: room.early_check_in !== undefined ? room.early_check_in : true,
+      house_rules: room.house_rules || "",
+      children_policy: room.children_policy || "",
     });
     if (room.images && room.images.length > 0) {
       setImagePreview(room.images[0]);
@@ -133,13 +161,21 @@ const RoomTypes = () => {
     setImagePreview(null);
     setFormData({
       name: "",
+      category_label: "",
       description: "",
       capacity: 2,
       size: "",
       base_price: "",
+      bed_type: "",
+      star_rating: 5,
       amenities: [],
       total_rooms: 0,
       images: [],
+      check_in_time: "9:00 AM",
+      check_out_time: "12:00 PM",
+      early_check_in: true,
+      house_rules: "",
+      children_policy: "",
     });
   };
 
@@ -249,7 +285,12 @@ const RoomTypes = () => {
               {/* Room Details */}
               <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
-                  <div>
+                  <div className="flex-1">
+                    {room.category_label && (
+                      <p className="text-xs font-semibold font-Lora uppercase mb-1" style={{ color: "#c49e72" }}>
+                        {room.category_label}
+                      </p>
+                    )}
                     <h3 className="text-xl font-bold font-Garamond" style={{ color: "#1e1e1e" }}>
                       {room.name}
                     </h3>
@@ -257,6 +298,13 @@ const RoomTypes = () => {
                       {room.description}
                     </p>
                   </div>
+                  {room.star_rating && (
+                    <div className="flex items-center ml-2">
+                      {[...Array(room.star_rating)].map((_, i) => (
+                        <span key={i} className="text-yellow-400">★</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Room Info */}
@@ -279,6 +327,17 @@ const RoomTypes = () => {
                       {room.size}
                     </span>
                   </div>
+                  {room.bed_type && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="flex items-center text-gray-600 font-Lora">
+                        <FaBed className="mr-2" style={{ color: "#c49e72" }} />
+                        Bed Type
+                      </span>
+                      <span className="font-semibold font-Lora" style={{ color: "#1e1e1e" }}>
+                        {room.bed_type}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600 font-Lora">Base Price</span>
                     <span className="font-bold font-Garamond text-lg" style={{ color: "#006938" }}>
@@ -367,6 +426,21 @@ const RoomTypes = () => {
 
                   <div>
                     <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
+                      Category Label
+                    </label>
+                    <input
+                      type="text"
+                      name="category_label"
+                      value={formData.category_label}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
+                      style={{ borderColor: "#c49e72" }}
+                      placeholder="e.g., LUXURY ROOM"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
                       Base Price (₹) <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -406,8 +480,42 @@ const RoomTypes = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
                       style={{ borderColor: "#c49e72" }}
-                      placeholder="450 sq ft"
+                      placeholder="500 SQ FT/Rooms"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
+                      Bed Type
+                    </label>
+                    <input
+                      type="text"
+                      name="bed_type"
+                      value={formData.bed_type}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
+                      style={{ borderColor: "#c49e72" }}
+                      placeholder="e.g., 2 King Bed"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
+                      Star Rating
+                    </label>
+                    <select
+                      name="star_rating"
+                      value={formData.star_rating}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
+                      style={{ borderColor: "#c49e72" }}
+                    >
+                      <option value="1">1 Star</option>
+                      <option value="2">2 Stars</option>
+                      <option value="3">3 Stars</option>
+                      <option value="4">4 Stars</option>
+                      <option value="5">5 Stars</option>
+                    </select>
                   </div>
 
                   <div>
@@ -427,6 +535,36 @@ const RoomTypes = () => {
 
                   <div>
                     <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
+                      Check-in Time
+                    </label>
+                    <input
+                      type="text"
+                      name="check_in_time"
+                      value={formData.check_in_time}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
+                      style={{ borderColor: "#c49e72" }}
+                      placeholder="9:00 AM - anytime"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
+                      Check-out Time
+                    </label>
+                    <input
+                      type="text"
+                      name="check_out_time"
+                      value={formData.check_out_time}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
+                      style={{ borderColor: "#c49e72" }}
+                      placeholder="Before noon"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
                       Amenities (comma-separated)
                     </label>
                     <input
@@ -435,7 +573,7 @@ const RoomTypes = () => {
                       onChange={handleAmenitiesChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
                       style={{ borderColor: "#c49e72" }}
-                      placeholder="WiFi, AC, TV, Mini Bar"
+                      placeholder="WiFi, AC, TV, Mini Bar, Swimming Pool, Gym facilities"
                     />
                   </div>
 
@@ -451,6 +589,36 @@ const RoomTypes = () => {
                       className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
                       style={{ borderColor: "#c49e72" }}
                       placeholder="Enter room description"
+                    ></textarea>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
+                      House Rules
+                    </label>
+                    <textarea
+                      name="house_rules"
+                      value={formData.house_rules}
+                      onChange={handleInputChange}
+                      rows="3"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
+                      style={{ borderColor: "#c49e72" }}
+                      placeholder="Enter house rules (e.g., No smoking, No pets, etc.)"
+                    ></textarea>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold font-Garamond mb-2" style={{ color: "#1e1e1e" }}>
+                      Children & Extra Beds Policy
+                    </label>
+                    <textarea
+                      name="children_policy"
+                      value={formData.children_policy}
+                      onChange={handleInputChange}
+                      rows="3"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-opacity-50 font-Lora"
+                      style={{ borderColor: "#c49e72" }}
+                      placeholder="Enter children and extra beds policy"
                     ></textarea>
                   </div>
 
@@ -479,20 +647,36 @@ const RoomTypes = () => {
                       </button>
                     </div>
                     <p className="text-xs text-gray-500 font-Lora mt-1">
-                      Upload room images. Recommended size: 1200x800px, max 5MB
+                      Upload multiple room images. Recommended size: 1200x800px, max 5MB each
                     </p>
 
-                    {/* Image Preview */}
-                    {imagePreview && (
-                      <div className="mt-3">
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
-                          onError={(e) => {
-                            e.target.style.display = "none";
-                          }}
-                        />
+                    {/* All Images Preview */}
+                    {formData.images && formData.images.length > 0 && (
+                      <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {formData.images.map((image, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={image}
+                              alt={`Room ${index + 1}`}
+                              className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                              onError={(e) => {
+                                e.target.style.display = "none";
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(index)}
+                              className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <FaTrash className="text-xs" />
+                            </button>
+                            {index === 0 && (
+                              <span className="absolute bottom-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded font-Lora">
+                                Primary
+                              </span>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>
